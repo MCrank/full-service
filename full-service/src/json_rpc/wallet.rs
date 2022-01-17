@@ -409,6 +409,14 @@ where
             );
             JsonCommandResponse::get_account_status { account, balance }
         }
+        JsonCommandRequest::get_address_for_account { account_id, index } => {
+            let assigned_subaddress = service
+                .get_address_for_account(&AccountID(account_id), index)
+                .map_err(format_error)?;
+            JsonCommandResponse::get_address_for_account {
+                address: Address::from(&assigned_subaddress),
+            }
+        }
         JsonCommandRequest::get_addresses_for_account {
             account_id,
             offset,
@@ -509,7 +517,7 @@ where
                     .collect::<Vec<(String, serde_json::Value)>>(),
             );
 
-            JsonCommandResponse::get_transaction_logs_for_account {
+            JsonCommandResponse::get_all_transaction_logs_for_account {
                 transaction_log_ids: transaction_logs_and_txos
                     .iter()
                     .map(|(t, _a)| t.transaction_id_hex.to_string())
@@ -571,15 +579,15 @@ where
                 txos.iter()
                     .map(|t| {
                         (
-                            t.txo.txo_id_hex.clone(),
+                            t.txo_id_hex.clone(),
                             serde_json::to_value(Txo::from(t)).expect("Could not get json value"),
                         )
                     })
                     .collect::<Vec<(String, serde_json::Value)>>(),
             );
 
-            JsonCommandResponse::get_txos_for_account {
-                txo_ids: txos.iter().map(|t| t.txo.txo_id_hex.clone()).collect(),
+            JsonCommandResponse::get_all_txos_for_account {
+                txo_ids: txos.iter().map(|t| t.txo_id_hex.clone()).collect(),
                 txo_map,
             }
         }
@@ -591,7 +599,7 @@ where
                 txos.iter()
                     .map(|t| {
                         (
-                            t.txo.txo_id_hex.clone(),
+                            t.txo_id_hex.clone(),
                             serde_json::to_value(Txo::from(t)).expect("Could not get json value"),
                         )
                     })
@@ -599,7 +607,7 @@ where
             );
 
             JsonCommandResponse::get_all_txos_for_address {
-                txo_ids: txos.iter().map(|t| t.txo.txo_id_hex.clone()).collect(),
+                txo_ids: txos.iter().map(|t| t.txo_id_hex.clone()).collect(),
                 txo_map,
             }
         }
@@ -730,7 +738,7 @@ where
                 txos.iter()
                     .map(|t| {
                         (
-                            t.txo.txo_id_hex.clone(),
+                            t.txo_id_hex.clone(),
                             serde_json::to_value(Txo::from(t)).expect("Could not get json value"),
                         )
                     })
@@ -738,7 +746,7 @@ where
             );
 
             JsonCommandResponse::get_txos_for_account {
-                txo_ids: txos.iter().map(|t| t.txo.txo_id_hex.clone()).collect(),
+                txo_ids: txos.iter().map(|t| t.txo_id_hex.clone()).collect(),
                 txo_map,
             }
         }

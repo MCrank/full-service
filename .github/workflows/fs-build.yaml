@@ -37,8 +37,8 @@ jobs:
           flavor: |
             latest=false
             suffix=${{ matrix.network }}
-            type=semver,pattern=v{{version}},priority=20
           tags: |
+            type=semver,pattern=v{{version}},priority=20
             type=sha,priority=10
 
       - name: Setup Docker Buildx

@@ -36,7 +36,7 @@ jobs:
           images: ${{ env.DOCKERHUB_REPO }}
           flavor: |
             latest=false
-            suffix=${{ matrix.network }}
+            suffix=-${{ matrix.network }}
           tags: |
             type=semver,pattern=v{{version}},priority=20
             type=sha,priority=10

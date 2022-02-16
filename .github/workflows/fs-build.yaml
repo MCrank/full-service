@@ -30,7 +30,6 @@ jobs:
           submodules: recursive
 
       - name: Generate Docker tags
-        if: $
         id: meta
         uses: docker/metadata-action@v3
         with:
